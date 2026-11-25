@@ -12,7 +12,7 @@ class Product:
     price: Decimal
     quantity: int
     had_orders_last_month: bool
-# Если были заказы, то True, иначе False
+# Если были заказы, то True, иначе False  
 
     @property
     def has_discount(self):
@@ -37,5 +37,5 @@ class User:
     @property
     def full_name(self):
         return f"{self.last_name} {self.name} {self.middel_name}"
-        
+
  
