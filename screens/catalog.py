@@ -61,12 +61,11 @@ def product_card(product):
         content = ft.Column(
             controls = price_elements,
             spacing = 4,
-            alignment= ft.Alignment.CENTER,
-            horizontal_alignment = ft.CrossAxisAlignment.CENTER
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
         ),
         width=125,
         height=110,
-        alignment = ft.Alignment.CENTER
     )
 
     return ft.Container(
