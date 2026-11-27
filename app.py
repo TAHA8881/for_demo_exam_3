@@ -4,7 +4,6 @@ from db import get_products
 from alerts import alert 
 from styles import *
 from screens.login import login_screen
-from screens.catalog import catalog_screen
 from screens.catalog import product_card
 from screens.common import header
 

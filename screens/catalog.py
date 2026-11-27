@@ -1,5 +1,4 @@
 import flet as ft
-from db import get_products
 from styles import *
 from screens.common import header
 
