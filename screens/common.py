@@ -21,6 +21,11 @@ def header(title, app, back=False):
             "Выйти",
             on_click=lambda e: app.logout()
         ))
+        user_info.controls.append(ft.TextButton(
+            "Корзина", 
+            icon=ft.Icons.SHOPPING_CART,
+            on_click=lambda e: (setattr(app, 'screen', 'cart'), app.render())
+        ))
     elif app.screen != "login":
         user_info.controls.append(ft.Text("Гость"))
         user_info.controls.append(ft.TextButton(

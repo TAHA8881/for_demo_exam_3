@@ -5,8 +5,10 @@ from alerts import alert
 from styles import *
 from screens.login import login_screen
 #from screens.catalog import product_card
-#from screens.common import header
+from screens.common import header
 from screens.catalog import catalog_screen
+from screens.product import product_screen
+from screens.cart import cart_screen
 
 class ShopApp:
     def __init__(self, page):
@@ -17,6 +19,11 @@ class ShopApp:
         self.sort_order = "none"
         self.category_filter = "Все категории"
         self.search_query = ""
+
+
+        self.selected_product = None
+        self.cart = [] # Список словарей: {'product': Product, 'stock_item_id': int, 'size': float, 'quantity': int, 'price': float}
+
 
     def load_catalog(self):
         self.products = get_products()
@@ -39,13 +46,21 @@ class ShopApp:
         self.render()
 
     def render(self):
-        title = "Авторизация" if self.screen == "login" else "Каталог обуви"
+
+        title_map = {
+            "login": "Авторизация",
+            "catalog": "Каталог обуви",
+            "product": "Просмотр товара",
+            "cart": "Оформление заказа"
+        }
+
+        title = title_map.get(self.screen, "Чудо обувь")
         self.page.title = "Чудо обувь - " + title
 
         try:
             if self.screen == "login":
                 content = login_screen(self)
-            else:
+#            else:
 #                content = ft.Column(
 #                    controls=[header(title, self,back =False),
 #                    ft.Column(
@@ -54,7 +69,14 @@ class ShopApp:
 #                        expand=True
 #                    )], expand=True
 #                )
+#                content = catalog_screen(self)
+            elif self.screen == "catalog":
                 content = catalog_screen(self)
+            elif self.screen == "product":
+                content = product_screen(self)
+            elif self.screen == "cart":
+                content = cart_screen(self)
+                
         except psycopg2.Error as error:
             alert(self.page, "error", str(error).strip() or "Ошибка базы данных")
             return

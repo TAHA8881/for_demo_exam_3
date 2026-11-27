@@ -76,7 +76,43 @@ def get_user_by_login(login):
                 """, (login,))
             row = cursor.fetchone()
             return User(**row) if row else None
-                    
+
+
+
+def get_product_sizes(product_id):
+    with closing(get_connection()) as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            cursor.execute(
+                """
+                SELECT s.id, s.size, st.quantity 
+                FROM stock_items st
+                JOIN sizes s ON st.size_id = s.id
+                WHERE st.product_id = %s AND st.quantity > 0
+                ORDER BY s.size
+                """, (product_id,))
+            return cursor.fetchall()
+
+def create_order(user_id, cart_items):
+    with closing(get_connection()) as conn:
+        with conn.cursor() as cursor:
+            # 1. Создаем заказ
+            cursor.execute(
+                "INSERT INTO orders (user_id, order_date) VALUES (%s, CURRENT_DATE) RETURNING order_number",
+                (user_id,)
+            )
+            order_number = cursor.fetchone()[0]
+
+            # 2. Добавляем позиции и списываем со склада
+            for item in cart_items:
+                cursor.execute(
+                    "INSERT INTO order_items (order_number, stock_item_id, quantity, price) VALUES (%s, %s, %s, %s)",
+                    (order_number, item['stock_item_id'], item['quantity'], item['price'])
+                )
+                cursor.execute(
+                    "UPDATE stock_items SET quantity = quantity - %s WHERE id = %s",
+                    (item['quantity'], item['stock_item_id'])
+                )
+            conn.commit()
 
 
 # products = get_products()
