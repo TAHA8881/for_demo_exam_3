@@ -4,8 +4,9 @@ from db import get_products
 from alerts import alert 
 from styles import *
 from screens.login import login_screen
-from screens.catalog import product_card
-from screens.common import header
+#from screens.catalog import product_card
+#from screens.common import header
+from screens.catalog import catalog_screen
 
 class ShopApp:
     def __init__(self, page):
@@ -13,6 +14,9 @@ class ShopApp:
         self.user= None
         self.screen="login"
         self.products = []
+        self.sort_order = "none"
+        self.category_filter = "Все категории"
+        self.search_query = ""
 
     def load_catalog(self):
         self.products = get_products()
@@ -26,6 +30,12 @@ class ShopApp:
     def logout(self):
         self.user=None
         self.screen  ="login"
+        self.sort_order = "none"
+        self.category_filter = "Все категории"
+        self.search_query = ""
+        self.render()
+
+    def update_filters(self):
         self.render()
 
     def render(self):
@@ -36,14 +46,15 @@ class ShopApp:
             if self.screen == "login":
                 content = login_screen(self)
             else:
-                content = ft.Column(
-                    controls=[header(title, self,back =False),
-                    ft.Column(
-                        controls=[product_card(p) for p in self.products],
-                        scroll=ft.ScrollMode.AUTO,
-                        expand=True
-                    )], expand=True
-                )
+#                content = ft.Column(
+#                    controls=[header(title, self,back =False),
+#                    ft.Column(
+#                        controls=[product_card(p) for p in self.products],
+#                        scroll=ft.ScrollMode.AUTO,
+#                        expand=True
+#                    )], expand=True
+#                )
+                content = catalog_screen(self)
         except psycopg2.Error as error:
             alert(self.page, "error", str(error).strip() or "Ошибка базы данных")
             return
